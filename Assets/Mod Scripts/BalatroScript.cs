@@ -11,6 +11,11 @@ public class BalatroScript : MonoBehaviour
     public KMBombInfo Bomb;
     public KMAudio Audio;
 
+    void Awake()
+    {
+        _moduleID = _moduleIdCounter++;
+    }
+
     // Use this for initialization
     void Start () {
 		
