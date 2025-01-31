@@ -14,4 +14,19 @@ public class Card
         BaseSpriteCoords = baseSpriteCoords;
         SoulSpriteCoords = soulSpriteCoords;
     }
+
+    public string GetName()
+    {
+        return Name;
+    }
+
+    public Vector2 GetBaseSpriteCoords()
+    {
+        return BaseSpriteCoords;
+    }
+
+    public Vector2 GetSoulSpriteCoords()
+    {
+        return SoulSpriteCoords;
+    }
 }
