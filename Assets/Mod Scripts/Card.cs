@@ -5,14 +5,10 @@ using UnityEngine;
 public class Card
 {
     private string Name;
-    private Vector2 BaseSpriteCoords;
-    private Vector2 SoulSpriteCoords;
 
-    public Card(string name, Vector2 baseSpriteCoords, Vector2 soulSpriteCoords)
+    public Card(string name)
     {
         Name = name;
-        BaseSpriteCoords = baseSpriteCoords;
-        SoulSpriteCoords = soulSpriteCoords;
     }
 
     public string GetName()
@@ -20,13 +16,8 @@ public class Card
         return Name;
     }
 
-    public Vector2 GetBaseSpriteCoords()
+    public override string ToString()
     {
-        return BaseSpriteCoords;
-    }
-
-    public Vector2 GetSoulSpriteCoords()
-    {
-        return SoulSpriteCoords;
+        return Name;
     }
 }

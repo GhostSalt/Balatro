@@ -10,10 +10,21 @@ public class BalatroScript : MonoBehaviour
     public KMBombModule Module;
     public KMBombInfo Bomb;
     public KMAudio Audio;
+    public CardRendererSpawner CardSpawner;
+    public CardArea JokerArea;
 
     void Awake()
     {
         _moduleID = _moduleIdCounter++;
+
+        JokerArea.SetCards(new CardRenderer[]{
+
+            CardSpawner.SpawnCard("joker", JokerArea),
+            CardSpawner.SpawnCard("canio", JokerArea),
+            CardSpawner.SpawnCard("hiker", JokerArea),
+            CardSpawner.SpawnCard("hit the road", JokerArea)
+
+            });
     }
 
     // Use this for initialization
