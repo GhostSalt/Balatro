@@ -10,8 +10,8 @@ public class CardRendererSpawner : MonoBehaviour
 
     void Start()
     {
-        SoulTemplate.gameObject.SetActive(false);
         CardTemplate.gameObject.SetActive(false);
+        SoulTemplate.gameObject.SetActive(false);
     }
 
     public CardRenderer SpawnCard(string name, CardArea area)

@@ -2,21 +2,19 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CardRenderer : MonoBehaviour
+public class CardRenderer : FloatableRenderer
 {
-    private Card InternalCard;
-    private SpriteRenderer BaseRend;
-    private SpriteRenderer SoulRend;
+    protected Card InternalCard;
+    protected SpriteRenderer SoulRend;
 
-    private const float POSITION_INNER = 0.025f;
-    private const float POSITION_OUTER = 0.075f;
+    protected const float POSITION_INNER = 0.025f;
+    protected const float POSITION_OUTER = 0.075f;
+    protected const float NATIVE_SCALE = 0.35f;
 
-    public void Initialise(Card internalCard, Sprite baseSprite, Sprite soulSprite, SpriteRenderer baseTemplate, SpriteRenderer soulTemplate)
+    public virtual void Initialise(Card internalCard, Sprite baseSprite, Sprite soulSprite, SpriteRenderer baseTemplate, SpriteRenderer soulTemplate)
     {
+        base.Initialise(baseSprite, baseTemplate);
         InternalCard = internalCard;
-
-        BaseRend = CreateRend(baseTemplate);
-        BaseRend.sprite = baseSprite;
 
         if (soulSprite != null)
         {
@@ -26,31 +24,28 @@ public class CardRenderer : MonoBehaviour
             SoulRend.sortingOrder = 1;
             StartCoroutine(AnimateSoul());
         }
-        StartCoroutine(Animate());
     }
 
-    private SpriteRenderer CreateRend(SpriteRenderer template)
+    public override void SetZ(int z)
     {
-        var rend = Instantiate(template, transform);
-        rend.gameObject.SetActive(true);
-        transform.localScale = Vector3.one * 0.35f;
-        return rend;
+        base.SetZ(z);
+        SetSoulZ(z);
     }
 
-    public void SetLocation(Vector3 location)
+    private void SetSoulZ(int z)
     {
-        transform.localPosition = location;
+        if (SoulRend != null)
+            SoulRend.sortingOrder = (z * 10) + 1;
     }
 
-    private IEnumerator Animate(float angleBoundary = 8f, float speedX = Mathf.PI / 8f / 5f, float speedZ = 2.718281828459045235360287471352f / 5f / 5f)
+    public override void Appear(float scale = 1f)
     {
-        while (true)
-        {
-            var x = Mathf.Lerp(-angleBoundary, angleBoundary, (Mathf.Sin(Mathf.PI * 2 * ((Time.time + transform.localPosition.x + transform.localPosition.y) * speedX % 1)) + 1) / 2);
-            var z = Mathf.Lerp(-angleBoundary, angleBoundary, (Mathf.Sin(Mathf.PI * 2 * ((Time.time + transform.localPosition.x + transform.localPosition.y) * speedZ % 1)) + 1) / 2);
-            transform.localRotation = Quaternion.Euler(z, x, 0);
-            yield return null;
-        }
+        StartCoroutine(AppearAnim(NATIVE_SCALE));
+    }
+
+    public override void Disappear()
+    {
+        StartCoroutine(DisappearAnim(NATIVE_SCALE));
     }
 
     private IEnumerator AnimateSoul(float angleBoundary = 10f, float scaleLower = 0.95f, float scaleUpper = 1.1f, float speedR = Mathf.PI / 25f, float speedS = 2.718281828459045235360287471352f / 15f)
@@ -66,5 +61,13 @@ public class CardRenderer : MonoBehaviour
             SoulRend.transform.localPosition = Vector3.back * p;
             yield return null;
         }
+    }
+
+    protected override IEnumerator DestroyLogic()
+    {
+        yield return StartCoroutine(DisappearAnim(NATIVE_SCALE));
+        Destroy(BaseRend.gameObject);
+        Destroy(SoulRend.gameObject);
+        Destroy(gameObject);
     }
 }
