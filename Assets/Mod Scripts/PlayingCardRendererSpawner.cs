@@ -15,12 +15,12 @@ public class PlayingCardRendererSpawner : MonoBehaviour
         FaceTemplate.gameObject.SetActive(false);
     }
 
-    public PlayingCardRenderer SpawnCard(string name, string enhancement, CardArea area)
+    public PlayingCardRenderer SpawnCard(PlayingCard card, CardArea area)
     {
-        var obj = new GameObject(name);
+        var obj = new GameObject(card.GetName());
         obj.transform.parent = area.transform;
         var rend = obj.AddComponent<PlayingCardRenderer>();
-        rend.Initialise(new Card(name), FindBaseSprite(enhancement), FindFaceSprite(name), BaseTemplate, FaceTemplate);
+        rend.Initialise(new Card(card.GetName()), FindBaseSprite(card.GetEnhancement()), FindFaceSprite(card.GetName()), BaseTemplate, FaceTemplate);
         return rend;
     }
 

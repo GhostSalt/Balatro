@@ -27,8 +27,8 @@ public class IntroScreen : MonoBehaviour
         audio.PlaySoundAtTransform("blind select", transform);
         Background.color = Color.clear;
         var chipColour = BlindData.FindBlindColour(chipRend.GetInternalBlind().GetName());
-        BackingColour.color = FindDarkColour(chipColour);
-        LightColour = FindLightColour(chipColour);
+        BackingColour.color = Utility.FindDarkerColour(chipColour);
+        LightColour = Utility.LightenColour(chipColour, 0.5f);
 
         chipRend.SetLocation(Vector3.up * 0.025f);
         chipRend.Appear(2);
@@ -80,15 +80,5 @@ public class IntroScreen : MonoBehaviour
         Vignette.color = Color.clear;
         Nameplate.color = Color.clear;
         chipRend.SetLocation(chipEnd);
-    }
-
-    private Color FindDarkColour(Color colour)
-    {
-        return new Color(Mathf.Lerp(colour.r, 0, 0.4f), Mathf.Lerp(colour.g, 0, 0.4f), Mathf.Lerp(colour.b, 0, 0.4f));
-    }
-
-    private Color FindLightColour(Color colour)
-    {
-        return new Color(Mathf.Lerp(colour.r, 1, 0.5f), Mathf.Lerp(colour.g, 1, 0.5f), Mathf.Lerp(colour.b, 1, 0.5f));
     }
 }

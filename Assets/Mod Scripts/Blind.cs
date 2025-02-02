@@ -10,6 +10,7 @@ public class Blind
     public Blind(string name)
     {
         Name = name;
+        Colour = BlindData.FindBlindColour(name);
     }
 
     public string GetName()
@@ -20,6 +21,13 @@ public class Blind
     public Color GetColour()
     {
         return Colour;
+    }
+
+    public Color GetBackgroundColour()
+    {
+        if (Name != "small blind" && Name != "big blind")
+            return Colour;
+        return new Color32(64, 128, 102, 255);
     }
 
     public override string ToString()

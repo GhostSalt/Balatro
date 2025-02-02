@@ -1,22 +1,41 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 using Rnd = UnityEngine.Random;
 
 public class BackgroundAnimator : MonoBehaviour
 {
+    public Image BackingColour;
     public Image RingTemplate;
     public Image SpiralA;
     public Image SpiralB;
     public int RingEndSize;
 
+    private List<Image> Rings;
+    private Color CurrentColour;
+    private Color DarkColour;
+
     // Use this for initialization
     void Start()
     {
+        Rings = new List<Image>();
         RunSimulation();
         StartCoroutine(RotateSpirals());
         RingTemplate.gameObject.SetActive(false);
+    }
+
+    public void SetColour(Blind blind)
+    {
+        var name = blind.GetName();
+        var colour = blind.GetBackgroundColour();
+        CurrentColour = colour;
+        DarkColour = Utility.FindDarkColour(CurrentColour);
+        BackingColour.color = CurrentColour;
+        SpiralA.color = SpiralB.color = DarkColour * new Color(1, 1, 1, SpiralA.color.a);
+        foreach (Image ring in Rings.Where(x => x != null))  // This happens before garbage collection, so I have to make sure I'm not using destroyed objects.
+            ring.color = DarkColour * new Color(1, 1, 1, ring.color.a);
     }
 
     private Image CreateRing()
@@ -24,12 +43,14 @@ public class BackgroundAnimator : MonoBehaviour
         var ring = Instantiate(RingTemplate, RingTemplate.transform.parent);
         ring.gameObject.SetActive(true);
         ring.rectTransform.sizeDelta = Vector2.zero;
-        ring.color = new Color(ring.color.r, ring.color.g, ring.color.b, Rnd.Range(0.15f, 0.3f));
+        ring.color = new Color(DarkColour.r, DarkColour.g, DarkColour.b, Rnd.Range(0.1f, 0.2f));
+        Rings.Add(ring);
         return ring;
     }
 
     private void DestroyRing(Image ring)
     {
+        Rings.Remove(ring);
         Destroy(ring.gameObject);
     }
 
@@ -46,8 +67,9 @@ public class BackgroundAnimator : MonoBehaviour
 
     void RunRingSimulation(Image ring, float time, float duration)
     {
+        Rings.Add(ring);
         if (time + duration <= 10)
-            return;
+            DestroyRing(ring);
         ring.rectTransform.sizeDelta = Vector2.one * Easing.InSine(10 - time, 0, RingEndSize, duration);
         StartCoroutine(RunPartialRingCycle(ring, 10 - time, duration));
     }
@@ -73,6 +95,7 @@ public class BackgroundAnimator : MonoBehaviour
 
     private IEnumerator RunRingCycle(Image ring, float duration)
     {
+        Rings.Add(ring);
         float timer = 0;
         while (timer < duration)
         {

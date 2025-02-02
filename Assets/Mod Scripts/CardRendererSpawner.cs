@@ -14,12 +14,12 @@ public class CardRendererSpawner : MonoBehaviour
         SoulTemplate.gameObject.SetActive(false);
     }
 
-    public CardRenderer SpawnCard(string name, CardArea area)
+    public CardRenderer SpawnCard(Card card, CardArea area)
     {
-        var obj = new GameObject(name);
+        var obj = new GameObject(card.GetName());
         obj.transform.parent = area.transform;
         var rend = obj.AddComponent<CardRenderer>();
-        rend.Initialise(new Card(name), FindCardSprite(name), FindSoulSprite(name), CardTemplate, SoulTemplate);
+        rend.Initialise(new Card(card.GetName()), FindCardSprite(card.GetName()), FindSoulSprite(card.GetName()), CardTemplate, SoulTemplate);
 
         return rend;
     }
