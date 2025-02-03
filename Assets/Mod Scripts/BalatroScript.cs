@@ -26,16 +26,16 @@ public class BalatroScript : MonoBehaviour
 
         PlayField.SetJokers(new List<Joker>() {
             new Joker("chicot"),
-            new Joker("hanging chad"),
+            new Joker("hologram"),
             new Joker("photograph"),
             new Joker("square joker"),
             new Joker("golden ticket"),
         });
         PlayField.SetPlayingCards(new List<PlayingCard>() {
             new PlayingCard("as", "normal"),
-            new PlayingCard("2s", "normal"),
-            new PlayingCard("3s", "normal"),
-            new PlayingCard("4s", "normal"),
+            new PlayingCard("2s", "mult"),
+            new PlayingCard("3s", "glass"),
+            new PlayingCard("4s", "lucky"),
             new PlayingCard("5s", "normal"),
             new PlayingCard("6s", "normal"),
             new PlayingCard("7s", "normal"),

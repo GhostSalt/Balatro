@@ -11,6 +11,7 @@ public class UISelectable : MonoBehaviour
     public Sprite NormalSprite;
     public Sprite HighlightedSprite;
     public Sprite SelectedSprite;
+    public Menu Redirect;
 
     private float InitScale;
     private bool IsActive, IsHighlighted, IsSelected;
@@ -27,17 +28,25 @@ public class UISelectable : MonoBehaviour
         Rend.transform.localScale = Selectable.transform.localScale = Vector3.zero;
     }
 
+    public event Action OnHighlight;
+
     protected virtual void SelectableHL()
     {
         IsHighlighted = true;
         UpdateState();
+        OnHighlight?.Invoke();
     }
+
+    public event Action OnHighlightEnded;
 
     protected virtual void SelectableHLEnded()
     {
         IsHighlighted = false;
         UpdateState();
+        OnHighlightEnded?.Invoke();
     }
+
+    public event Action OnInteract;
 
     protected virtual void SelectablePress()
     {
@@ -46,8 +55,12 @@ public class UISelectable : MonoBehaviour
             IsSelected = true;
             UpdateState();
             RequestSound("press");
+            OnInteract?.Invoke();
+            Redirect.Activate();
         }
     }
+
+    public event Action OnInteractEnded;
 
     protected virtual void SelectableRelease()
     {
@@ -55,6 +68,7 @@ public class UISelectable : MonoBehaviour
         {
             IsSelected = false;
             UpdateState();
+            OnInteractEnded?.Invoke();
         }
     }
 
